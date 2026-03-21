@@ -76,6 +76,8 @@ Full scale (100% amplitude) measures **2.2Vrms** at 1kHz into a high-impedance l
 
 The `FULL_SCALE_VRMS` constant in `src/ui/ui.c` can be updated if recalibration is needed.
 
+![signal_gen scope](docs/scope.jpg)
+
 ---
 
 ## Project Structure

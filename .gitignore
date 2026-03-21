@@ -1,2 +1,28 @@
-build
-!.vscode/*
+# Build output
+build/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+
+# VS Code generated files (keep .vscode/ but ignore user-specific overrides)
+.vscode/ipch/
+.vscode/*.log
+
+# Pico SDK import — generated or copied locally, not part of the project source
+pico_sdk_import.cmake
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Thumbnails
+Thumbs.db
+
+# LVGL submodule is tracked via .gitmodules, not ignored
+# CAD files — include these (Fusion 360 exports and STLs go in cad/)
+# cad/          ← do NOT ignore, we want these in the repo
