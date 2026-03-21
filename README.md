@@ -1,4 +1,4 @@
-# signal_gen
+# Audio Signal Generator
 
 A compact bench signal generator built around the Waveshare RP2040-Zero, PCM5102A I2S DAC, and ST7789V3 display. Generates a clean sine wave from 20Hz to 20kHz with adjustable amplitude, displayed on a dual-arc LVGL interface. Designed to live on a study desk rather than take up rack space.
 
