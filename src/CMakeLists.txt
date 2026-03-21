@@ -1,0 +1,5 @@
+add_subdirectory(encoder)
+add_subdirectory(i2s)
+add_subdirectory(audio)
+add_subdirectory(display)
+add_subdirectory(ui)

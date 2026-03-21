@@ -1,0 +1,55 @@
+;
+; i2s_tx.pio  –  I2S transmitter for RP2040
+;
+; Format : Standard I2S (Philips), 32-bit frames, 16-bit audio left-justified
+;           LRCK low  = left channel
+;           LRCK high = right channel
+;           Data changes on BCK falling edge, receiver samples on rising edge
+;           LRCK transitions on BCK falling edge, 1 BCK cycle before first bit
+;
+; Pin mapping (all relative, set in C with pio_sm_config):
+;   OUT  base pin  = PIN_I2S_DATA          (1 pin)
+;   SIDE base pin  = PIN_I2S_BCK           (2 pins: BCK=bit0,  then next pin=LRCK)
+;
+;   NOTE: BCK and LRCK must be consecutive GPIOs in that order.
+;         In config.h: BCK=GP11, LRCK=GP12, DATA=GP10
+;         side-set bit 1 = LRCK (higher GPIO), bit 0 = BCK (lower GPIO)
+;
+; Data word format pushed to TX FIFO (one 32-bit word per channel):
+;   [31:16] = 16-bit signed audio sample (MSB first)
+;   [15:0]  = 0x0000 (padding, transmitted as silence for lower 16 bits)
+;
+; Autopull : threshold = 32, shift right (MSB first)
+; PIO clock : BCK_freq * 2   (2 cycles per BCK period: 1 low, 1 high)
+;   At 48 kHz stereo 32-bit: BCK = 3.072 MHz, PIO clk = 6.144 MHz
+;   With SYS_CLK = 122.88 MHz: divider = 20 (integer, zero jitter)
+;
+; Cycle budget per stereo pair: 64 BCK cycles = 128 PIO cycles
+;   Left  channel: 32 bits (x=30 → 31 loop iters + 1 final OUT = 32 bits)
+;   Right channel: 32 bits (same)
+;
+
+.program i2s_tx
+.side_set 2                        ; bit1 = LRCK, bit0 = BCK
+
+;                                   LRCK BCK
+public entry_point:
+    set  x, 30          side 0b01  ; BCK↑, LRCK=0 (left ch) — 1-cycle I2S delay
+
+left_loop:
+    out  pins, 1        side 0b00  ; BCK↓, put data bit on wire
+    jmp  x-- left_loop  side 0b01  ; BCK↑, receiver samples; loop while x != 0
+
+    ; 32nd bit of left channel; LRCK transitions to right simultaneously with BCK↓
+    out  pins, 1        side 0b10  ; BCK↓, LRCK↑ (right ch transition)
+    set  x, 30          side 0b11  ; BCK↑, LRCK=1, prep counter
+                                   ; autopull fires here — loads right ch word
+
+right_loop:
+    out  pins, 1        side 0b10  ; BCK↓
+    jmp  x-- right_loop side 0b11  ; BCK↑; loop
+
+    ; 32nd bit of right; LRCK falls back to left
+    out  pins, 1        side 0b00  ; BCK↓, LRCK↓ (left ch transition)
+.wrap                              ; → entry_point: BCK↑, 1-cycle I2S delay for left
+                                   ; autopull fires — loads next left ch word
