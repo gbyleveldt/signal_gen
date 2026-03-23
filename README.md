@@ -189,9 +189,14 @@ Flash `build/signal_gen.uf2` to the RP2040-Zero (hold BOOT, plug USB, drag file)
 
 ---
 
-## Acknowledgements
+## Built With Claude
 
-This project was developed with assistance from [Claude](https://claude.ai) (Anthropic), which contributed to the software architecture, PIO I2S implementation, LVGL integration, and debugging throughout the bring-up process. The iterative development conversation covered everything from initial hardware selection through to final UI design.
+This project was developed collaboratively with [Claude](https://claude.ai) (Anthropic). Claude contributed to the software architecture, PIO I2S implementation, LVGL integration, encoder driver design, and debugging throughout the bring-up process — from initial hardware selection through to final UI design and GitHub publication.
+
+All commits made directly by Claude include the following co-author tag:
+```
+Co-authored-by: Claude (Anthropic) <claude@anthropic.com>
+```
 
 ---
 
