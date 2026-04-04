@@ -35,7 +35,7 @@ A compact bench signal generator built around the Waveshare RP2040-Zero, PCM5102
 ## Pin Assignment
 
 | GPIO | Function |
-|------|----------|
+|------|-----------|
 | GP0  | Display RST |
 | GP1  | Display BLK (PWM backlight) |
 | GP3  | Freq encoder A |
@@ -137,19 +137,11 @@ Cross-core shared state (`freq_hz`, `amplitude`, `channel`) is protected by a Pi
 ### Setup
 
 ```bash
-git clone https://github.com/gbyleveldt/signal_gen.git
+git clone --recurse-submodules https://github.com/gbyleveldt/signal_gen.git
 cd signal_gen
-
-# Initialise git (required before adding submodules)
-git init
-
-# Add LVGL v8 as a submodule
-git submodule add https://github.com/lvgl/lvgl.git lib/lvgl
-cd lib/lvgl && git checkout release/v8.3 && cd ../..
-
-# Copy pico_sdk_import.cmake from your SDK installation
-cp $PICO_SDK_PATH/external/pico_sdk_import.cmake .
 ```
+
+The `--recurse-submodules` flag automatically initialises and populates the LVGL submodule. `pico_sdk_import.cmake` is already included in the repository.
 
 ### Build
 
@@ -177,6 +169,8 @@ Flash `build/signal_gen.uf2` to the RP2040-Zero (hold BOOT, plug USB, drag file)
 | SPI instance | Display uses `spi1` (GP26/GP27), not `spi0` |
 | System clock | Set to 122.88MHz for an exact integer PIO divider for 48kHz I2S. Falls back gracefully if the PLL cannot achieve it exactly |
 | Si5351A | I2C1 reserved at GP14/GP15 for future MCLK generation. When the DSP slave project requires it, populate the Si5351A and implement synchronised clock generation |
+
+See [DEVELOPMENT.md](DEVELOPMENT.md) for the rationale behind each of these decisions.
 
 ---
 
