@@ -14,8 +14,6 @@ Deferred work items for signal_gen. For the public-facing summary, see the Futur
 
 - [ ] **Output stage** — current PCM5102A direct output is 2.2Vrms at 100% amplitude. Evaluate op-amp buffer with resistor-ratio attenuation for driving lower-impedance loads or producing a calibrated reference level (+4dBu = 1.228Vrms, 0dBV = 1.000Vrms).
 
-- [ ] **RP2040 boilerplate template** — create a reusable project scaffold incorporating lessons learned: pico-vscode.cmake block, compile_commands, LVGL custom.cmake fix, c_cpp_properties.json using compileCommands. Tracked in gbyleveldt/claude-skills memory.
-
 ---
 
 *Last updated: April 2026*
